@@ -2,12 +2,6 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#ifdef DEBUG
-    #define ON_DEBUG(code) code
-#else
-    #define ON_DEBUG(code)
-#endif
-
 typedef double stack_elem_t;
 
 enum {
@@ -17,14 +11,16 @@ enum {
     STK_SIZE_LESS_ZERO = -2,
     STK_NOT_EXIST = -1
 };
-
-struct my_stack_t {
+typedef struct my_stack_t {
     stack_elem_t *data;
     size_t size;
     size_t capacity;
-};
+} my_stack_t;
 
 int stack_ctor (my_stack_t *stk, const size_t cap) {
+    #ifdef DEBUG
+        stk->capacity = cap;
+    #endif
 
     stk->capacity = cap;
     stk->size = 0;
