@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#define STCK_CTOR(stk, capacity) stack_ctor((stk), (capaciy), #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
+
 typedef double stack_elem_t;
 
 enum {
@@ -12,14 +14,23 @@ enum {
     STK_NOT_EXIST = -1
 };
 typedef struct my_stack_t {
+    #ifdef DEBUG
+        const char *name;
+        const char *file;
+        const size_t line;
+        const char *func;
+    #endif
     stack_elem_t *data;
     size_t size;
     size_t capacity;
 } my_stack_t;
 
-int stack_ctor (my_stack_t *stk, const size_t cap) {
+int stack_ctor (my_stack_t *stk, const size_t cap, const char *name, const char *file, const size_t line, const char *func) {
     #ifdef DEBUG
-        stk->capacity = cap;
+        stk->name = name;
+        stk->file = file;
+        stk->line = line;
+        stk->func = func;
     #endif
 
     stk->capacity = cap;
@@ -28,20 +39,12 @@ int stack_ctor (my_stack_t *stk, const size_t cap) {
         stk->data = NULL;
     else
         stk->data = (stack_elem_t *)calloc(cap, sizeof(stack_elem_t));
-
 }
 
 int stack_dtor (my_stack_t *stk) {
     free(stk->data);
     stk->size = 0;
     stk->capacity = 0;
-}
-
-void stack_assert_func (my_stack_t *stk, const char *file, int line) {
-    if(!stack_verify(stk)) {
-        stack_dump(stk);
-        printf("ERROR: In file %s at line %d\n", file, line);
-    }
 }
 
 int stack_verify (my_stack_t *stk) {
@@ -70,3 +73,11 @@ int stack_verify (my_stack_t *stk) {
 int stack_dump (my_stack_t *stk) {
 
 }
+
+void stack_assert_func (my_stack_t *stk, const char *file, int line) {
+    if(!stack_verify(stk)) {
+        stack_dump(stk);
+        printf("ERROR: In file %s at line %d\n", file, line);
+    }
+}
+
