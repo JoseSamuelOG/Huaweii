@@ -1,7 +1,7 @@
 #include "stack.h"
 
 stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, const char *file, const size_t line, const char *func) {
-    STK_ASSERT(stk);
+    assert(stk);
     
     #ifdef DEBUG
         stk->left_cannary_stk = left_cannary;
@@ -30,7 +30,7 @@ stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, co
     }
 
     #ifdef DEBUG
-    stk->data[0] = left_cannary;
+    *(stk->data) = left_cannary;
     #endif
 
     for(size_t i = 0; i != stk->capacity; ++i) {
@@ -42,7 +42,7 @@ stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, co
     }
 
     #ifdef DEBUG
-    stk->data[stk->capacity] = right_cannary;
+    *(stk->data + stk->capacity) = right_cannary;
     #endif
 
     #ifdef DEBUG

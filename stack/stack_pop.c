@@ -15,10 +15,11 @@ stack_func_t stack_pop (my_stack_t *stk) {
     }
     
     #ifdef DEBUG
-        stk->data[stk->capacity + 1] = right_cannary;
+        stk->data[stk->capacity] = right_cannary;
     #endif
 
     HASH_COUNTER;
     STK_ASSERT(stk); 
+    printf("Pop is succesful!\n");
     return stk->data[--stk->size];
 }

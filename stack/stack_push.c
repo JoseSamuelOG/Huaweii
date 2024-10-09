@@ -5,9 +5,9 @@ stack_func_t stack_push (my_stack_t *stk, stack_elem_t token) {
 
     if (stk->capacity == 0)
         stk->capacity = min_nonzero_stk_cap;
-    else if (stk->size == stk->capacity)
+    else if (stk->size == stk->capacity) {
         stk->capacity *= 2;
-
+    }
     stk->data = (stack_elem_t *)realloc(stk->data, (stk->capacity 
     #ifdef DEBUG
                                                                   + 2
@@ -23,7 +23,7 @@ stack_func_t stack_push (my_stack_t *stk, stack_elem_t token) {
     }
 
     #ifdef DEBUG
-        stk->data[stk->capacity + 1] = right_cannary;
+        stk->data[stk->capacity] = right_cannary;
     #endif
 
     stk->data[stk->size++
@@ -34,5 +34,6 @@ stack_func_t stack_push (my_stack_t *stk, stack_elem_t token) {
 
     HASH_COUNTER;
     STK_ASSERT(stk);
+    printf("Push of %d is succesful!\n", stk->data[stk->size]);
     return stk->data[stk->size];
 }

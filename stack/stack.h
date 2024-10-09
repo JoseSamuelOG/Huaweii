@@ -9,7 +9,7 @@
 #define STK_DUMP(stk) stack_dump((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__, (hash_str))
 #define HASH_COUNTER hash_counter(&hash_str, stk);
 
-typedef double stack_elem_t;
+typedef size_t stack_elem_t;
 typedef size_t stack_func_t;
 typedef size_t cannary_t;  /*uint64_t*/
 typedef uint64_t hash_t;
