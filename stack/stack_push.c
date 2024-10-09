@@ -1,7 +1,7 @@
 #include "stack.h"
 
 stack_func_t stack_push (my_stack_t *stk, stack_elem_t token) {
-    STK_ASSERT(&stk);
+    STK_ASSERT(stk);
 
     if (stk->capacity == 0)
         stk->capacity = min_nonzero_stk_cap;
@@ -33,6 +33,6 @@ stack_func_t stack_push (my_stack_t *stk, stack_elem_t token) {
                               ] = token;
 
     HASH_COUNTER;
-    STK_ASSERT(&stk);
+    STK_ASSERT(stk);
     return stk->data[stk->size];
 }

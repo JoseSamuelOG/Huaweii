@@ -1,7 +1,7 @@
 #include "stack.h"
 
 stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, const char *file, const size_t line, const char *func) {
-    assert(stk);
+    STK_ASSERT(stk);
     
     #ifdef DEBUG
         stk->left_cannary_stk = left_cannary;
@@ -42,7 +42,7 @@ stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, co
     }
 
     #ifdef DEBUG
-    stk->data[stk->capacity + 1] = right_cannary;
+    stk->data[stk->capacity] = right_cannary;
     #endif
 
     #ifdef DEBUG
@@ -51,7 +51,7 @@ stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, co
 
     HASH_COUNTER;
 
-    STK_ASSERT(&stk);
+    STK_ASSERT(stk);
 
     printf("Stack \"%s\" is successfully constructed!\n", name);
     printf("At %s : %d in function %s\n", file, line, func);

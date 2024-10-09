@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include "debug.h"
 
-#define STK_CTOR(stk, capacity) stack_ctor((stk), (capaciy), #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
+#define STK_CTOR(stk, capacity) stack_ctor((stk), (cap), #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
 #define STK_ASSERT(stk) stack_assert_func ((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__)
 #define STK_DUMP(stk) stack_dump((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__, (hash_str))
-#define HASH_COUNTER hash_counter(&hash_str, &stk);
+#define HASH_COUNTER hash_counter(&hash_str, stk);
 
 typedef double stack_elem_t;
 typedef size_t stack_func_t;
@@ -45,13 +45,13 @@ typedef struct my_stack_hash_t {
     hash_t data_hash;
 } my_stack_hash_t;
 
-const size_t min_nonzero_stk_cap = 16;
-const stack_elem_t poizon_value = -1488;
-// const size_t cannary_len = sizeof(cannary_t)/sizeof(stack_elem_t);
-const cannary_t left_cannary = 0xCAFEBABE;
-const cannary_t right_cannary = 0xFEE1DEAD;
+extern size_t min_nonzero_stk_cap;
+extern stack_elem_t poizon_value;
+// extern size_t cannary_len;
+extern cannary_t left_cannary;
+extern cannary_t right_cannary;
 
-my_stack_hash_t hash_str = {};
+extern my_stack_hash_t hash_str;
 
 stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, const char *file, const size_t line, const char *func);
 stack_func_t stack_dtor (my_stack_t *stk);
@@ -59,7 +59,7 @@ stack_func_t stack_push (my_stack_t *stk, stack_elem_t token);
 stack_func_t stack_pop (my_stack_t *stk);
 #ifdef DEBUG
 stack_func_t stack_verify (my_stack_t *stk);
-stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, const char *func);
+stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, const char *func, my_stack_hash_t hash_struct);
 stack_func_t stack_assert_func (my_stack_t *stk, const char *file, const size_t line, const char *func);
 hash_t hash_func(const void *data, size_t size);
 void hash_counter(my_stack_hash_t *hash_struct, my_stack_t *stk);

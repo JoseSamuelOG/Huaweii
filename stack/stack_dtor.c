@@ -1,7 +1,7 @@
 #include "stack.h"
 
 stack_func_t stack_dtor (my_stack_t *stk) {
-    STK_ASSERT(&stk);
+    STK_ASSERT(stk);
 
     free(stk->data);
     stk->size = -1;
@@ -13,7 +13,7 @@ stack_func_t stack_dtor (my_stack_t *stk) {
         stk->line = -1;
     #endif
 
-    stk = -1;
+    stk = NULL;
 
     printf("Stack is successfully destructed!\n");
 }

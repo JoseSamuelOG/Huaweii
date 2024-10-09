@@ -32,13 +32,13 @@ stack_func_t stack_verify (my_stack_t *stk) {
 }
 
 stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, const char *func, my_stack_hash_t hash_struct) {
-    size_t error_code = stack_verify;
-    if (error_code == 0) {
-        printf("stack_t[0x%X]:\n", stk);
+    stack_func_t error_code = stack_verify(stk);
+    /*if (error_code == 0) { */
+        printf("\nstack_t[0x%X]:\n", stk);
         printf("|\tcalled from %s : %d from function: %s\n", file, line, func);
         printf("|\tname \"%s\" born at %s : %d in function %s\n", stk->name, stk->file, stk->line, stk->func);
         printf("|\t{\n");
-        printf("|\t\tstk_left_cannary = %d\n", stk->left_cannary_stk);
+        printf("|\t\tstk_left_cannary = 0x%X\n", stk->left_cannary_stk);
         printf("|\t\tcapacity = %d\n", stk->capacity);
         printf("|\t\tsize = %d\n", stk->size);
         printf("|\t\tstack hash = %d\n", hash_str.stack_hash);
@@ -46,18 +46,18 @@ stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, c
         printf("|\t\tdata[0x%X]:\n", stk->data);
         printf("|\t\t{\n");
         size_t i = 0;
-        printf("|\t\t\t**[%d] = 0x%X - \033[30;43mleft data cannary\033[0 at address: <0x%X>\n", ++i, stk->data[i], &(stk->data[i]));
+        printf("|\t\t\t**[%d] = 0x%X - \033[30;43mleft data cannary\033[0;0m at address: <0x%X>\n", i++, stk->data[i], &(stk->data[i]));
         for ( ; i != stk->size; ++i) {
             printf("|\t\t\t *[%d] = %d at address: <0x%X>\n", i, stk->data[i], &(stk->data[i]));
         }
         for ( ; i != stk->capacity; ++i) {
-            printf("|\t\t\t  [%d] = %d \033[36;42mPOIZON_VALUE!\033[0 at address: <0x%X>\n", i, stk->data[i], &(stk->data[i]));
+            printf("|\t\t\t  [%d] = %d \033[36;42mPOIZON_VALUE!\033[0;0m at address: <0x%X>\n", i, stk->data[i], &(stk->data[i]));
         }
-        printf("|\t\t\t**[%d] = 0x%X - \033[30;43mright data cannary\033[0 at address: <0x%X>\n", ++i, stk->data[i], &(stk->data[i]));
+        printf("|\t\t\t**[%d] = 0x%X - \033[30;43mright data cannary\033[0m at address: <0x%X>\n", i, stk->data[i], &(stk->data[i]));
         printf("|\t\t}\n");
-        printf("|\t\tstk_right_cannary = %d", stk->right_cannary_stk);
+        printf("|\t\tstk_right_cannary = 0x%X\n", stk->right_cannary_stk);
         printf("|\t}\n");
-    }
+    //}
     if (error_code & STK_NOT_EXIST == STK_NOT_EXIST) {
         printf("|\n|\t\t\033[5;31mERROR: STACK DOES NOT EXIST!!!\033[0m\t\n|\n");
     } else {
@@ -83,7 +83,7 @@ stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, c
             printf("|\n|\t\t\033[5;31mERROR: DATA HASH IS CORRUPTED!!!\033[0m\t\n|\n");
         }
 
-        printf("stack_t[0x%X]:\n", stk);
+    /*    printf("stack_t[0x%X]:\n", stk);
         printf("|\tcalled from %s : %d from function: %s\n", file, line, func);
         printf("|\tname \"%s\" born at %s : %d in function %s\n", stk->name, stk->file, stk->line, stk->func);
         printf("|\t{\n");
@@ -93,19 +93,19 @@ stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, c
         printf("|\t\tstack hash = %d\n", hash_str.stack_hash);
         printf("|\t\tdata hash = %d\n", hash_str.data_hash);
         printf("|\t\tstk_right_cannary = %d", stk->right_cannary_stk);
-        printf("|\t}\n");  
+        printf("|\t}\n");  */
     }
 }
 
 stack_func_t stack_assert_func (my_stack_t *stk, const char *file, const size_t line, const char *func) {
-    if(!stack_verify(&stk)) {
+    if(!stack_verify(stk)) {
         printf("||\t\t\033[5;31mERROR ASSERTION FAILED!!!\033[0m\n");
         printf("||\t\tIN FILE: %s\n", file);
         printf("||\t\tAT LINE: %d\n", line);
         printf("||\t\tFUNCTION CALLED: %s|\n", func);
         printf("||\t\tCHECK DUMP BELOW\n\n");
-        printf("||\t\tERROR CODE = %d", stack_verify(&stk));
-        STK_DUMP(&stk);
+        printf("||\t\tERROR CODE = %d", stack_verify(stk));
+        STK_DUMP(stk);
         free(stk->data);
         free(stk);
         abort();

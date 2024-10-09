@@ -1,7 +1,7 @@
 #include "stack.h"
 
 stack_func_t stack_pop (my_stack_t *stk) {
-    STK_ASSERT(&stk);
+    STK_ASSERT(stk);
 
     if (stk->capacity == 0) {
         return 0;
@@ -19,6 +19,6 @@ stack_func_t stack_pop (my_stack_t *stk) {
     #endif
 
     HASH_COUNTER;
-    STK_ASSERT(&stk); 
+    STK_ASSERT(stk); 
     return stk->data[--stk->size];
 }
