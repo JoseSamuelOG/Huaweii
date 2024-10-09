@@ -5,12 +5,14 @@
 #include "debug.h"
 
 #define STK_CTOR(stk, capacity) stack_ctor((stk), (capaciy), #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
-#define STK_ASSERT(stk) stack_assert_func (stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
-#define STK_DUMP(stk) stack_dump((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__)
+#define STK_ASSERT(stk) stack_assert_func ((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__)
+#define STK_DUMP(stk) stack_dump((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__, (hash_str))
+#define HASH_COUNTER hash_counter(&hash_str, &stk);
 
 typedef double stack_elem_t;
 typedef size_t stack_func_t;
 typedef size_t cannary_t;  /*uint64_t*/
+typedef uint64_t hash_t;
 
 enum {
     STK_NOT_EXIST = 1,
@@ -18,7 +20,9 @@ enum {
     STK_BAD_CAP = 4,
     STK_BAD_SZ = 8,
     STK_CANNARY_DEAD = 16,
-    STK_DATA_CANNARY_DEAD = 32
+    STK_DATA_CANNARY_DEAD = 32,
+    STK_BAD_HASH = 64,
+    STK_DATA_BAD_HASH = 128
 };
 typedef struct my_stack_t {
     #ifdef DEBUG
@@ -36,22 +40,27 @@ typedef struct my_stack_t {
     #endif
 } my_stack_t;
 
+typedef struct my_stack_hash_t {
+    hash_t stack_hash;
+    hash_t data_hash;
+} my_stack_hash_t;
+
 const size_t min_nonzero_stk_cap = 16;
 const stack_elem_t poizon_value = -1488;
 // const size_t cannary_len = sizeof(cannary_t)/sizeof(stack_elem_t);
 const cannary_t left_cannary = 0xCAFEBABE;
 const cannary_t right_cannary = 0xFEE1DEAD;
 
-stack_func_t stack_assert_func (my_stack_t *stk, const char *file, const size_t line, const char *func) {
-    if(!stack_verify(stk)) {
-        printf("||\t\t\033[5;31mERROR ASSERTION FAILED!!!\033[0m\t\n");
-        printf("||\t\tIN FILE: %s\n", file);
-        printf("||\t\tAT LINE: %d\n", line);
-        printf("||\t\tFUNCTION CALLED: %s|\n", func);
-        printf("||\t\tCHECK DUMP BELOW\n\n");
-        STK_DUMP(&stk);
-        free(stk->data);
-        free(stk);
-        abort();
-    }
-}
+my_stack_hash_t hash_str = {};
+
+stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, const char *file, const size_t line, const char *func);
+stack_func_t stack_dtor (my_stack_t *stk);
+stack_func_t stack_push (my_stack_t *stk, stack_elem_t token);
+stack_func_t stack_pop (my_stack_t *stk);
+#ifdef DEBUG
+stack_func_t stack_verify (my_stack_t *stk);
+stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, const char *func);
+stack_func_t stack_assert_func (my_stack_t *stk, const char *file, const size_t line, const char *func);
+hash_t hash_func(const void *data, size_t size);
+void hash_counter(my_stack_hash_t *hash_struct, my_stack_t *stk);
+#endif
