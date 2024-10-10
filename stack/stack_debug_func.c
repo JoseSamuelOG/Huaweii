@@ -8,10 +8,10 @@ stack_func_t stack_verify (my_stack_t *stk) {
         errcode += STK_NOT_EXIST;
         return errcode;
     }
-    if (!stk->data && stk->capacity != 0) {
+    if (!stk->data && (stk->capacity != 0)) {
         errcode += STK_DATA_NOT_EXIST;
     }
-    if (stk->capacity < min_nonzero_stk_cap) {
+    if (stk->capacity < min_nonzero_stk_cap && (errcode & STK_DATA_NOT_EXIST == STK_DATA_NOT_EXIST)) {
         errcode += STK_BAD_CAP;
     }
     if (stk->size < 0) {
@@ -20,7 +20,7 @@ stack_func_t stack_verify (my_stack_t *stk) {
     if (stk->left_cannary_stk != left_cannary || stk->right_cannary_stk != right_cannary) {
         errcode += STK_CANNARY_DEAD;
     }
-    if (stk->data[0] != left_cannary || stk->data[stk->capacity] != right_cannary) {
+    if (stk->data[0] != left_cannary || stk->data[stk->capacity + 1] != right_cannary) {
         errcode += STK_DATA_CANNARY_DEAD;
     }
     if (hash_str.stack_hash != hash_func((const void *)&stk, sizeof(stk))) {
@@ -72,10 +72,10 @@ stack_func_t stack_dump (my_stack_t *stk, const char *file, const size_t line, c
         printf("|\t\t{\n");
         size_t i = 0;
         printf("|\t\t\t**[%d] = 0x%X - \033[30;43mleft data cannary\033[0;0m at address: <0x%X>\n", i++, stk->data[i], &(stk->data[i]));
-        for ( ; i < stk->size; ++i) {
+        for ( ; i < stk->size + 1; ++i) {
             printf("|\t\t\t *[%d] = %d at address: <0x%X>\n", i, stk->data[i], &(stk->data[i]));
         }
-        for ( ; i < stk->capacity; ++i) {
+        for ( ; i < stk->capacity + 1; ++i) {
             printf("|\t\t\t  [%d] = %d \033[36;42mPOIZON_VALUE!\033[0;0m at address: <0x%X>\n", i, stk->data[i], &(stk->data[i]));
         }
         printf("|\t\t\t**[%d] = 0x%X - \033[30;43mright data cannary\033[0m at address: <0x%X>\n", i, stk->data[i], &(stk->data[i]));

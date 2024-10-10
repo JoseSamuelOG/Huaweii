@@ -14,13 +14,17 @@ stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, co
     stk->capacity = cap;
     stk->size = 0;
     if (cap == 0) {
-        stk->data = NULL;
+        #ifdef DEBUG
+            stk->data = (stack_elem_t *)calloc(2, sizeof(stack_elem_t));
+        #else
+            stk->data = NULL; // Тут пизда у нас две канарейки вообще-то
+        #endif
     } else if (cap < min_nonzero_stk_cap) {
         stk->data = (stack_elem_t *)calloc(min_nonzero_stk_cap 
         #ifdef DEBUG
                                                                 + 2
         #endif
-                                                                    , sizeof(stack_elem_t));
+                                                                    , sizeof(stack_elem_t)); // Cука должно быть 11 а не 10, надо в других ифдефах хуярить!
     } else {
         stk->data = (stack_elem_t *)calloc(cap 
         #ifdef DEBUG
@@ -42,7 +46,10 @@ stack_func_t stack_ctor (my_stack_t *stk, const size_t cap, const char *name, co
     }
 
     #ifdef DEBUG
-    *(stk->data + stk->capacity) = right_cannary;
+        if (stk->capacity == 0) 
+            stk->data[stk->capacity + 1] = right_cannary;
+        else
+            stk->data[stk->capacity + 1] = right_cannary;
     #endif
 
     #ifdef DEBUG

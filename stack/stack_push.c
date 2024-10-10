@@ -7,6 +7,7 @@ stack_func_t stack_push (my_stack_t *stk, stack_elem_t token) {
         stk->capacity = min_nonzero_stk_cap;
     else if (stk->size == stk->capacity) {
         stk->capacity *= 2;
+        printf("capaciry increased = %d\n", stk->capacity);
     }
     stk->data = (stack_elem_t *)realloc(stk->data, (stk->capacity 
     #ifdef DEBUG
@@ -23,7 +24,7 @@ stack_func_t stack_push (my_stack_t *stk, stack_elem_t token) {
     }
 
     #ifdef DEBUG
-        stk->data[stk->capacity] = right_cannary;
+        stk->data[stk->capacity + 1] = right_cannary;
     #endif
 
     stk->data[stk->size++

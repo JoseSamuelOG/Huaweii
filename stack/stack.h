@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "debug.h"
 
-#define STK_CTOR(stk, capacity) stack_ctor((stk), (cap), #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
+#define STK_CTOR(stk, capacity) stack_ctor((stk), capacity, #stk, __FILE__, __LINE__, __PRETTY_FUNCTION__)
 #define STK_ASSERT(stk) stack_assert_func ((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__)
 #define STK_DUMP(stk) stack_dump((stk), __FILE__, __LINE__, __PRETTY_FUNCTION__, (hash_str))
 #define HASH_COUNTER hash_counter(&hash_str, stk);
